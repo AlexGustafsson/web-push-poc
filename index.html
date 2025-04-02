@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Web Push PoC</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input,
+      textarea {
+        display: block;
+        width: 320px;
+      }
+
+      input {
+        height: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="subscribeForm">
+      <input
+        type="text"
+        id="applicationServerKey"
+        required="true"
+        placeholder="Application server key"
+        width="80"
+      />
+      <input type="submit" value="Subscribe" />
+    </form>
+    <form id="unsubscribeForm" style="display: none">
+      <input type="submit" value="Unsubscribe" />
+    </form>
+    <textarea id="output" cols="80" rows="10"></textarea>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        window.pushManager.getSubscription().then((subscription) => {
+          if (!subscription) {
+            return;
+          }
+
+          document.getElementById("subscribeForm").style.display = "none";
+          document.getElementById("unsubscribeForm").style.display = "block";
+        });
+
+        document
+          .getElementById("subscribeForm")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            window.pushManager
+              .subscribe({
+                // MUST be true for declerative web push
+                userVisibleOnly: true,
+                applicationServerKey: [
+                  document.getElementById("applicationServerKey").value,
+                ],
+              })
+              .then((subscription) => {
+                document.getElementById("output").value =
+                  JSON.stringify(subscription);
+
+                document.getElementById("subscribeForm").style.display = "none";
+                document.getElementById("unsubscribeForm").style.display =
+                  "block";
+              })
+              .catch((error) => {
+                document.getElementById("output").value = error;
+              });
+
+            return false;
+          });
+
+        document
+          .getElementById("unsubscribeForm")
+          .addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            window.pushManager.getSubscription().then((subscription) => {
+              if (!subscription) {
+                return;
+              }
+
+              subscription
+                .unsubscribe()
+                .then((ok) => {
+                  document.getElementById("output").value = "";
+
+                  document.getElementById("subscribeForm").style.display =
+                    "block";
+                  document.getElementById("unsubscribeForm").style.display =
+                    "none";
+                })
+                .catch((error) => {
+                  document.getElementById("output").value = error;
+                });
+            });
+
+            return false;
+          });
+      });
+    </script>
+  </body>
+</html>

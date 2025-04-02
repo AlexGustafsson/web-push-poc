@@ -82,6 +82,7 @@ takes the following payload.
   // Subscription as defined by a client
   "subscription": {
     "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABnsaKXD9TQQBnvUPMVtVh3ksOzMbYI4BtSZpTUeBElIPciCoTjFnHz3HcK8I2aUPY5h14LNnl_Ej8TflGDxfmQmXzdh3RUibjgvQTiXF5oPsoT3x91irhgdodwCoRzlrZYENahkFyIqb7A_S__Pdqq7eHMWCcHd-j8Yqiy-cf0htUkSDk",
+    // Optional. Exists in Firefox, not Safari
     "expirationTime": null,
     "keys": {
       "auth": "Bbb0TH880GkTvuqV3JTseA",

@@ -46,6 +46,8 @@ func (a *Agent) Push(request *webpush.PushRequest) error {
 		return err
 	}
 
+	// TODO: Validate authentication, public key, vapid
+
 	// NOTE: In our case we don't really care about the rest of the fields...
 	// TODO: Again, this interface isn't really that nice for our stateless use
 	// case. In practice we have the state in the token above

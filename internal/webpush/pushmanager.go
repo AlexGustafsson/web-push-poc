@@ -17,7 +17,7 @@ import (
 type Subscription struct {
 	ID             string           `json:"-"`
 	Endpoint       string           `json:"endpoint"`
-	ExpirationTime *time.Time       `json:"expirationTime"`
+	ExpirationTime *time.Time       `json:"expirationTime,omitempty"`
 	Keys           SubscriptionKeys `json:"keys"`
 
 	applicationServerPublicKey *ecdh.PublicKey

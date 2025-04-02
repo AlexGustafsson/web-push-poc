@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -17,6 +18,10 @@ func main() {
 		return
 	}
 
+	// MUST be set for Safari to work
+	// SEE: https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers
+	applicationServer.Subject = "https://example.com"
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("POST /api/v1/push", func(w http.ResponseWriter, r *http.Request) {
@@ -26,17 +31,40 @@ func main() {
 			Message      string               `json:"message"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+
+		True := true
+		False := false
+		message := webpush.DeclerativePushMessage{
+			WebPush: 8030,
+			Notification: webpush.DeclerativePushNotification{
+				Title:    "Notification",
+				Navigate: "https://example.com",
+				Body:     request.Message,
+				Renotify: &True,
+				Silent:   &False,
+			},
+		}
+		content, err := json.Marshal(&message)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		fmt.Printf("%s\n", content)
 
 		target, err := request.Subscription.PushTarget()
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		applicationServer.Push(r.Context(), target, []byte(request.Message), nil)
+		err = applicationServer.Push(r.Context(), target, content, nil)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 
 	slog.Info("Started application server", slog.String("applicationServerPublicKey", applicationServer.PublicKeyString()))

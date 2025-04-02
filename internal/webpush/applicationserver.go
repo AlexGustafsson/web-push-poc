@@ -9,6 +9,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -144,6 +145,12 @@ func (a *ApplicationServer) Push(ctx context.Context, target *PushTarget, conten
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusCreated {
+		x, err := io.ReadAll(res.Body)
+		if err == nil {
+			fmt.Printf("%s\n", x)
+		}
+		fmt.Println(res.Header)
+
 		// TODO: Parse body and create a proper error
 		return fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
