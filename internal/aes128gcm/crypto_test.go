@@ -42,6 +42,33 @@ func TestEncrypt(t *testing.T) {
 			// ExpectedCiphertext:  "uNCkWiNYzKTnBN9ji3-qWAAAABkCYTHOG8chz_gnvgOqdGYovxyjuqRyJFjEDyoF1Fvkj6hQPdPHI51OEUKEpgz3SsLWIqS_uA",
 			ExpectedCiphertext: "uNCkWiNYzKTnBN9ji3-qWAAAABkCYTHOG8chz_gn2gI0ofGmv5f-6AkiuXzlWpUMkQzygrZXO6L-z5uKh9iiBcajZ_n9e5IG",
 		},
+		{
+			Name:                "RFC 8291 Appendix A",
+			Plaintext:           "V2hlbiBJIGdyb3cgdXAsIEkgd2FudCB0byBiZSBhIHdhdGVybWVsb24",
+			InputKeyingMaterial: "S4lYMb_L0FxCeq0WhDx813KgSYqU26kOyzWUdsXYyrg",
+			Salt:                "DGv6ra1nlYgDCS1FRnbzlw",
+			KeyID:               "BP4z9KsN6nGRTbVYI_c7VJSPQTBtkgcy27mlmlMoZIIgDll6e3vCYLocInmYWAmS6TlzAC8wEqKK6PBru3jl7A8",
+			RecordSize:          4096,
+			ExpectedCiphertext:  "DGv6ra1nlYgDCS1FRnbzlwAAEABBBP4z9KsN6nGRTbVYI_c7VJSPQTBtkgcy27mlmlMoZIIgDll6e3vCYLocInmYWAmS6TlzAC8wEqKK6PBru3jl7A_yl95bQpu6cVPTpK4Mqgkf1CXztLVBSt2Ks3oZwbuwXPXLWyouBWLVWGNWQexSgSxsj_Qulcy4a-fN",
+		},
+		{
+			Name:                "gauntface/simple-push-demo",
+			Plaintext:           base64.RawURLEncoding.EncodeToString([]byte("weattackatdawn")),
+			InputKeyingMaterial: "b6zpwBJpyjx2c3Dq5QAYzgJZX-R59KpfBBNglKExK3I",
+			Salt:                "eQAMnLABzEBYh7vIcdkjeA",
+			KeyID:               "BPEbjQb2WmTSuXKrPjCJTexrAEJDwoivUPRJPb95QuENt0DLjKFsUh0W7YGVzh1YrPZWNIldVSg2qEJxKlH-N9E",
+			RecordSize:          4096,
+			ExpectedCiphertext:  "eQAMnLABzEBYh7vIcdkjeAAAEABBBPEbjQb2WmTSuXKrPjCJTexrAEJDwoivUPRJPb95QuENt0DLjKFsUh0W7YGVzh1YrPZWNIldVSg2qEJxKlH-N9GeyG6iTTeylMHxtpYk6iAHHrZ-9BN_E6yBWCtKOwQJ",
+		},
+		{
+			Name:                "Declerative Web Push regression test",
+			Plaintext:           base64.RawURLEncoding.EncodeToString([]byte(`{"web_push":8030,"notification":{"title":"Notification","navigate":"https://example.com","body":"Hello"}}`)),
+			InputKeyingMaterial: "SwfgrfPa4hdK7Bn2SIy36SWKqnsxdIdJlOT4olAI7is",
+			Salt:                "pkeNWI6mDrK-HsHUccmcKw",
+			KeyID:               "BFyejXlMoxgdB6ReIFrpQJTtSObkhHPYGhbNv7XwLcDGh6x2CVCbG2RUq-nuZU1A5kIjAjIesc7f1v1y2eNhD1s",
+			RecordSize:          4096,
+			ExpectedCiphertext:  "pkeNWI6mDrK-HsHUccmcKwAAEABBBFyejXlMoxgdB6ReIFrpQJTtSObkhHPYGhbNv7XwLcDGh6x2CVCbG2RUq-nuZU1A5kIjAjIesc7f1v1y2eNhD1tlELUKtIywzjlqEtmnhAaaQDtQUcMkVMcr3R_eH0o9OtHSp212Um3Ht_D5Ka2QzhJdf8gbXGumxkvBhpuQRq7ROBsYn-ZtZkGJ5cyZvD9oImkZfv3D7xuh5tD9ozZYv5D3AlPMIiqgLVTPeDRdEYGCF53SwxLwWGylAg",
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -91,6 +118,18 @@ func TestDecrypt(t *testing.T) {
 			Ciphertext:          "uNCkWiNYzKTnBN9ji3-qWAAAABkCYTHOG8chz_gnvgOqdGYovxyjuqRyJFjEDyoF1Fvkj6hQPdPHI51OEUKEpgz3SsLWIqS_uA",
 			InputKeyingMaterial: "BO3ZVPxUlnLORbVGMpbT1Q",
 			ExpectedPlaintext:   "SSBhbSB0aGUgd2FscnVz",
+		},
+		{
+			Name:                "gauntface/simple-push-demo",
+			Ciphertext:          "eQAMnLABzEBYh7vIcdkjeAAAEABBBPEbjQb2WmTSuXKrPjCJTexrAEJDwoivUPRJPb95QuENt0DLjKFsUh0W7YGVzh1YrPZWNIldVSg2qEJxKlH-N9GeyG6iTTeylMHxtpYk6iAHHrZ-9BN_E6yBWCtKOwQJ",
+			InputKeyingMaterial: "b6zpwBJpyjx2c3Dq5QAYzgJZX-R59KpfBBNglKExK3I",
+			ExpectedPlaintext:   base64.RawURLEncoding.EncodeToString([]byte("weattackatdawn")),
+		},
+		{
+			Name:                "Declerative Web Push regression test",
+			Ciphertext:          "pkeNWI6mDrK-HsHUccmcKwAAEABBBFyejXlMoxgdB6ReIFrpQJTtSObkhHPYGhbNv7XwLcDGh6x2CVCbG2RUq-nuZU1A5kIjAjIesc7f1v1y2eNhD1tlELUKtIywzjlqEtmnhAaaQDtQUcMkVMcr3R_eH0o9OtHSp212Um3Ht_D5Ka2QzhJdf8gbXGumxkvBhpuQRq7ROBsYn-ZtZkGJ5cyZvD9oImkZfv3D7xuh5tD9ozZYv5D3AlPMIiqgLVTPeDRdEYGCF53SwxLwWGylAg",
+			InputKeyingMaterial: "SwfgrfPa4hdK7Bn2SIy36SWKqnsxdIdJlOT4olAI7is",
+			ExpectedPlaintext:   base64.RawURLEncoding.EncodeToString([]byte(`{"web_push":8030,"notification":{"title":"Notification","navigate":"https://example.com","body":"Hello"}}`)),
 		},
 	}
 
@@ -189,6 +228,20 @@ func TestDeriveNonce(t *testing.T) {
 			Salt:                 "uNCkWiNYzKTnBN9ji3-qWA",
 			ExpectedNonce:        "VqylG1rdt-mJrNgO",
 		},
+		{
+			Name:                 "RFC 8291 Appendix A",
+			RecordSequenceNumber: "AAAAAAAAAAAAAAAA",
+			InputKeyingMaterial:  "S4lYMb_L0FxCeq0WhDx813KgSYqU26kOyzWUdsXYyrg",
+			Salt:                 "DGv6ra1nlYgDCS1FRnbzlw",
+			ExpectedNonce:        "4h_95klXJ5E_qnoN",
+		},
+		{
+			Name:                 "gauntface/simple-push-demo",
+			RecordSequenceNumber: "AAAAAAAAAAAAAAAA",
+			InputKeyingMaterial:  "b6zpwBJpyjx2c3Dq5QAYzgJZX-R59KpfBBNglKExK3I",
+			Salt:                 "eQAMnLABzEBYh7vIcdkjeA",
+			ExpectedNonce:        "R_pz_3ePXEqQqhfs",
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -232,6 +285,12 @@ func TestDeriveContentEncryptionKey(t *testing.T) {
 			InputKeyingMaterial: "BO3ZVPxUlnLORbVGMpbT1Q",
 			Salt:                "uNCkWiNYzKTnBN9ji3-qWA",
 			ExpectedCEK:         "u_eEOTjjVWUVrH82pQNwpw",
+		},
+		{
+			Name:                "gauntface/simple-push-demo",
+			InputKeyingMaterial: "b6zpwBJpyjx2c3Dq5QAYzgJZX-R59KpfBBNglKExK3I",
+			Salt:                "eQAMnLABzEBYh7vIcdkjeA",
+			ExpectedCEK:         "Co4iuaOxN5KtkbN0dBYZyg",
 		},
 	}
 

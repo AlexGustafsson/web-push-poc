@@ -31,6 +31,13 @@ func TestHeader(t *testing.T) {
 			ExpectedRecordSize: 25,
 			ExpectedKeyID:      "YTE",
 		},
+		{
+			Name:               "gauntface/simple-push-demo",
+			Ciphertext:         "eQAMnLABzEBYh7vIcdkjeAAAEABBBPEbjQb2WmTSuXKrPjCJTexrAEJDwoivUPRJPb95QuENt0DLjKFsUh0W7YGVzh1YrPZWNIldVSg2qEJxKlH-N9GeyG6iTTeylMHxtpYk6iAHHrZ-9BN_E6yBWCtKOwQJ",
+			ExpectedSalt:       "eQAMnLABzEBYh7vIcdkjeA",
+			ExpectedRecordSize: 4096,
+			ExpectedKeyID:      "BPEbjQb2WmTSuXKrPjCJTexrAEJDwoivUPRJPb95QuENt0DLjKFsUh0W7YGVzh1YrPZWNIldVSg2qEJxKlH-N9E",
+		},
 	}
 
 	for _, testCase := range testCases {
