@@ -44,7 +44,7 @@ func Encrypt(plaintext []byte, ikm []byte, salt []byte, keyID []byte, recordSize
 		return nil, err
 	}
 
-	// TODO: Issue is dataBytesPerRecord includs padding, but we don't know how
+	// TODO: Issue is dataBytesPerRecord includes padding, but we don't know how
 	// much beforehand
 
 	for record := 0; record < records; record++ {
