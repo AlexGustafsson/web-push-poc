@@ -60,7 +60,13 @@ func main() {
 			return
 		}
 
-		err = applicationServer.Push(r.Context(), target, content, nil)
+		pushOptions := &webpush.PushOptions{
+			TTL:         3600,
+			Urgency:     webpush.UrgencyHigh,
+			ContentType: "application/notification+json",
+		}
+
+		err = applicationServer.Push(r.Context(), target, content, pushOptions)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

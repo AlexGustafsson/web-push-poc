@@ -65,9 +65,27 @@ func (a *ApplicationServer) PublicKeyString() string {
 type PushOptions struct {
 	TTL         int64
 	ContentType string
-	Urgency     string
-	Topic       string
+	// Indication of whether to send the notification immediately or prioritize
+	// the recipient’s device power considerations for delivery. Provide one of
+	// the following values: very-low, low, normal, or high. To attempt to deliver
+	// the notification immediately, specify high.
+	Urgency Urgency
+	// Optional identifier that the push service uses to coalesce notifications.
+	// Use 32 characters from the URL or filename-safe Base64 characters sets.
+	// Failure to do so will yield in Apple responding with BadWebPushTopic.
+	// NOTE: Topic is visible to the service, therefore it is recommended to use
+	// a stable random looking value (i.e. hash) as opposed to a readable string.
+	Topic string
 }
+
+type Urgency string
+
+const (
+	UrgencyVeryLow Urgency = "very-low"
+	UrgencyLow     Urgency = "low"
+	UrgencyNormal  Urgency = "normal"
+	UrgencyHigh    Urgency = "high"
+)
 
 type PushTarget struct {
 	Endpoint             string
@@ -134,9 +152,24 @@ func (a *ApplicationServer) Push(ctx context.Context, target *PushTarget, conten
 		return err
 	}
 
-	req.Header.Set("TTL", "30")
 	req.Header.Set("Content-Encoding", "aes128gcm")
 	req.Header.Set("Authorization", vapid.FormatAuthorizationHeader(vapidToken, &a.ecdsa.PublicKey))
+
+	if options != nil && options.TTL != 0 {
+		req.Header.Set("TTL", strconv.FormatInt(options.TTL, 10))
+	}
+
+	if options != nil && options.ContentType != "" {
+		req.Header.Set("Content-Type", options.ContentType)
+	}
+
+	if options != nil && options.Urgency != "" {
+		req.Header.Set("Urgency", string(options.Urgency))
+	}
+
+	if options != nil && options.Topic != "" {
+		req.Header.Set("Topic", options.Topic)
+	}
 
 	res, err := a.Client.Do(req)
 	if err != nil {
