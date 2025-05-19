@@ -32,6 +32,13 @@ func TestDeriveInputKeyingMaterial(t *testing.T) {
 			AuthenticationSecret:        "WQPDDSyc6zuWFh4uf-j_iA",
 			ExpectedInputKeyingMaterial: "b6zpwBJpyjx2c3Dq5QAYzgJZX-R59KpfBBNglKExK3I",
 		},
+		{
+			Name:                        "web-push-libs",
+			SenderPrivateKey:            "PIS4Ddm0laePFLtaIFceRKingIT7-wtmrfC1In4Qdk8",
+			RecipientPublicKey:          "BGjMKZb-kF3YvQ1PE0zXQM2iOCpRD-9ZEVMM3TUU9SUr_mVhIIdbBY1-0XMZ03NrSqgP3tmycvwRsdnD8w5YpCA",
+			AuthenticationSecret:        "uEMWDVY9OhnL-QwUZlKNRg",
+			ExpectedInputKeyingMaterial: "t_zK2QcuRXCEmECTCyzIa_gsfUuLGXsqx91rOa2oRYM",
+		},
 	}
 
 	for _, testCase := range testCases {

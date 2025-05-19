@@ -38,6 +38,13 @@ func TestHeader(t *testing.T) {
 			ExpectedRecordSize: 4096,
 			ExpectedKeyID:      "BPEbjQb2WmTSuXKrPjCJTexrAEJDwoivUPRJPb95QuENt0DLjKFsUh0W7YGVzh1YrPZWNIldVSg2qEJxKlH-N9E",
 		},
+		{
+			Name:               "web-push-libs",
+			Ciphertext:         "lFIj-_UML_iEnPfvHM03HAAAEABBBCd8ZrreM0dG5wDW5Qqg4WwXpDbFaTBC1Ksk_Q6kA1m5jw5xRzkEMs0XN1seQzZG_ZACrMPVrdtPdq2ddG1xvzr-CAFutu47kl0p0a04LfizMFTzhWw_IpD0B_jouGJrxv8UpoCXpa1XYrx2h5N2yx2-Bp2mYaUpSE1CxGg5oZyNXVyH02qNuWN9H4PCX5bDJH6ob790Cxq1jKMHuUt977QE11O-RYyoIv1W1Hg",
+			ExpectedSalt:       "lFIj-_UML_iEnPfvHM03HA",
+			ExpectedRecordSize: 4096,
+			ExpectedKeyID:      "BCd8ZrreM0dG5wDW5Qqg4WwXpDbFaTBC1Ksk_Q6kA1m5jw5xRzkEMs0XN1seQzZG_ZACrMPVrdtPdq2ddG1xvzo",
+		},
 	}
 
 	for _, testCase := range testCases {

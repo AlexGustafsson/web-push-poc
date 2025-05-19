@@ -69,6 +69,15 @@ func TestEncrypt(t *testing.T) {
 			RecordSize:          4096,
 			ExpectedCiphertext:  "pkeNWI6mDrK-HsHUccmcKwAAEABBBFyejXlMoxgdB6ReIFrpQJTtSObkhHPYGhbNv7XwLcDGh6x2CVCbG2RUq-nuZU1A5kIjAjIesc7f1v1y2eNhD1tlELUKtIywzjlqEtmnhAaaQDtQUcMkVMcr3R_eH0o9OtHSp212Um3Ht_D5Ka2QzhJdf8gbXGumxkvBhpuQRq7ROBsYn-ZtZkGJ5cyZvD9oImkZfv3D7xuh5tD9ozZYv5D3AlPMIiqgLVTPeDRdEYGCF53SwxLwWGylAg",
 		},
+		{
+			Name:                "web-push-libs",
+			Plaintext:           base64.RawURLEncoding.EncodeToString([]byte(`{"web_push":8030,"notification":{"title":"Hello, World!","navigate":"https://example.com"}}`)),
+			InputKeyingMaterial: "cHUxzkyPrxX8LEizP12yr9ZCCkPAM-OXb5yW_iEvGPI",
+			Salt:                "lFIj-_UML_iEnPfvHM03HA",
+			KeyID:               "BCd8ZrreM0dG5wDW5Qqg4WwXpDbFaTBC1Ksk_Q6kA1m5jw5xRzkEMs0XN1seQzZG_ZACrMPVrdtPdq2ddG1xvzo",
+			RecordSize:          4096,
+			ExpectedCiphertext:  "lFIj-_UML_iEnPfvHM03HAAAEABBBCd8ZrreM0dG5wDW5Qqg4WwXpDbFaTBC1Ksk_Q6kA1m5jw5xRzkEMs0XN1seQzZG_ZACrMPVrdtPdq2ddG1xvzr-CAFutu47kl0p0a04LfizMFTzhWw_IpD0B_jouGJrxv8UpoCXpa1XYrx2h5N2yx2-Bp2mYaUpSE1CxGg5oZyNXVyH02qNuWN9H4PCX5bDJH6ob790Cxq1jKMHuUt977QE11O-RYyoIv1W1Hg",
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -130,6 +139,12 @@ func TestDecrypt(t *testing.T) {
 			Ciphertext:          "pkeNWI6mDrK-HsHUccmcKwAAEABBBFyejXlMoxgdB6ReIFrpQJTtSObkhHPYGhbNv7XwLcDGh6x2CVCbG2RUq-nuZU1A5kIjAjIesc7f1v1y2eNhD1tlELUKtIywzjlqEtmnhAaaQDtQUcMkVMcr3R_eH0o9OtHSp212Um3Ht_D5Ka2QzhJdf8gbXGumxkvBhpuQRq7ROBsYn-ZtZkGJ5cyZvD9oImkZfv3D7xuh5tD9ozZYv5D3AlPMIiqgLVTPeDRdEYGCF53SwxLwWGylAg",
 			InputKeyingMaterial: "SwfgrfPa4hdK7Bn2SIy36SWKqnsxdIdJlOT4olAI7is",
 			ExpectedPlaintext:   base64.RawURLEncoding.EncodeToString([]byte(`{"web_push":8030,"notification":{"title":"Notification","navigate":"https://example.com","body":"Hello"}}`)),
+		},
+		{
+			Name:                "web-push-libs",
+			Ciphertext:          "lFIj-_UML_iEnPfvHM03HAAAEABBBCd8ZrreM0dG5wDW5Qqg4WwXpDbFaTBC1Ksk_Q6kA1m5jw5xRzkEMs0XN1seQzZG_ZACrMPVrdtPdq2ddG1xvzr-CAFutu47kl0p0a04LfizMFTzhWw_IpD0B_jouGJrxv8UpoCXpa1XYrx2h5N2yx2-Bp2mYaUpSE1CxGg5oZyNXVyH02qNuWN9H4PCX5bDJH6ob790Cxq1jKMHuUt977QE11O-RYyoIv1W1Hg",
+			InputKeyingMaterial: "cHUxzkyPrxX8LEizP12yr9ZCCkPAM-OXb5yW_iEvGPI",
+			ExpectedPlaintext:   base64.RawURLEncoding.EncodeToString([]byte(`{"web_push":8030,"notification":{"title":"Hello, World!","navigate":"https://example.com"}}`)),
 		},
 	}
 
@@ -242,6 +257,13 @@ func TestDeriveNonce(t *testing.T) {
 			Salt:                 "eQAMnLABzEBYh7vIcdkjeA",
 			ExpectedNonce:        "R_pz_3ePXEqQqhfs",
 		},
+		{
+			Name:                 "web-push-libs",
+			RecordSequenceNumber: "AAAAAAAAAAAAAAAA",
+			InputKeyingMaterial:  "cHUxzkyPrxX8LEizP12yr9ZCCkPAM-OXb5yW_iEvGPI",
+			Salt:                 "lFIj-_UML_iEnPfvHM03HA",
+			ExpectedNonce:        "6hrNswPbJmpPExIw",
+		},
 	}
 
 	for _, testCase := range testCases {
@@ -291,6 +313,12 @@ func TestDeriveContentEncryptionKey(t *testing.T) {
 			InputKeyingMaterial: "b6zpwBJpyjx2c3Dq5QAYzgJZX-R59KpfBBNglKExK3I",
 			Salt:                "eQAMnLABzEBYh7vIcdkjeA",
 			ExpectedCEK:         "Co4iuaOxN5KtkbN0dBYZyg",
+		},
+		{
+			Name:                "web-push-libs",
+			InputKeyingMaterial: "cHUxzkyPrxX8LEizP12yr9ZCCkPAM-OXb5yW_iEvGPI",
+			Salt:                "lFIj-_UML_iEnPfvHM03HA",
+			ExpectedCEK:         "_m3Qkn8PeEz76P60bUsdxg",
 		},
 	}
 
