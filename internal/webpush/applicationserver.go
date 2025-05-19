@@ -10,9 +10,9 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/AlexGustafsson/web-push-poc/internal/aes128gcm"
@@ -23,9 +23,10 @@ import (
 // SEE: Generic Event Delivery Using HTTP Push - https://datatracker.ietf.org/doc/html/rfc8030.
 // SEE: VAPID - https://datatracker.ietf.org/doc/html/rfc8292#section-3.2.
 // SEE: Message Encryption for Web Push - https://www.rfc-editor.org/rfc/rfc8291.html
+// SEE: Apple docs - https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers#Send-your-notification-request-to-the-recipients-endpoint
 type ApplicationServer struct {
 	Subject string
-	Client  http.Client
+	Client  *http.Client
 
 	ecdsa *ecdsa.PrivateKey
 	ecdh  *ecdh.PrivateKey
@@ -43,7 +44,7 @@ func NewApplicationServer() (*ApplicationServer, error) {
 	}
 
 	return &ApplicationServer{
-		Client: *http.DefaultClient,
+		Client: http.DefaultClient,
 
 		ecdsa: ecdsa,
 		ecdh:  ecdh,
