@@ -121,7 +121,7 @@ func (a *ApplicationServer) Push(ctx context.Context, target *PushTarget, conten
 
 	ikm, err := DeriveInputKeyingMaterial(
 		privateKey, target.UserAgentPublicKey,
-		target.UserAgentPublicKey, a.ecdh.PublicKey(),
+		target.UserAgentPublicKey, privateKey.PublicKey(),
 		target.AuthenticationSecret,
 	)
 	if err != nil {
