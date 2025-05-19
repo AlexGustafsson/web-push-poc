@@ -152,6 +152,11 @@ The code is (mostly) split up into one package per RFC.
   Message Encryption for Web Push (RFC 8291). Interface modeled after the web
   APIs (PushManager, PushSubscription)
 
+## macOS/ios debugging
+
+You can install the profile in `profile.mobileconfig` to log verbose logs from
+`apsd`. Remember to uninstall it afterwards as it will log private fields.
+
 ## References
 
 - https://github.com/mozilla-services/autopush-rs
