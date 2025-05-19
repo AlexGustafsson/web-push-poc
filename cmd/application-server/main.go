@@ -35,16 +35,11 @@ func main() {
 			return
 		}
 
-		True := true
-		False := false
 		message := webpush.DeclerativePushMessage{
 			WebPush: 8030,
 			Notification: webpush.DeclerativePushNotification{
-				Title:    "Notification",
+				Title:    request.Message,
 				Navigate: "https://example.com",
-				Body:     request.Message,
-				Renotify: &True,
-				Silent:   &False,
 			},
 		}
 		content, err := json.Marshal(&message)
