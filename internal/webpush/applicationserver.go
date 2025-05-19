@@ -103,6 +103,11 @@ func (p PushTarget) Audience() (string, error) {
 }
 
 func (a *ApplicationServer) Push(ctx context.Context, target *PushTarget, content []byte, options *PushOptions) error {
+	// SEE: https://www.rfc-editor.org/rfc/rfc8291.html#section-4
+	if len(content) > 3993 {
+		return fmt.Errorf("record size is too large - cannot exceed 3993B")
+	}
+
 	audience, err := target.Audience()
 	if err != nil {
 		return err
@@ -133,14 +138,11 @@ func (a *ApplicationServer) Push(ctx context.Context, target *PushTarget, conten
 		return err
 	}
 
-	// An application server MUST set the "rs" parameter in the "aes128gcm"
-	// content coding header to a size that is greater than the sum of the lengths
-	// of the plaintext, the padding delimiter (1 octet), any padding, and the
-	// authentication tag (16 octets).
-	recordSize := len(content) + 16 + 1 + 1
-	if recordSize > 4096 {
-		slog.Warn("Record size is large, exceeds what's required to be supported by push services")
-	}
+	// An application server MUST encrypt a push message with a single record
+	recordSize := 4096
+	record := make([]byte, recordSize)
+	copy(record, content)
+	record[len(content)] = 0x02
 
 	ciphertext, err := aes128gcm.Encrypt(content, ikm, salt[:], privateKey.PublicKey().Bytes(), recordSize)
 	if err != nil {
